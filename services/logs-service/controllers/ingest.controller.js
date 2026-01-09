@@ -3,7 +3,10 @@ const pino = require('pino');
 const Log = require('../../../models/log.model');
 const { createAppError } = require('../../../utils/error');
 
-const logger = pino({ level: 'info' });
+const logger = pino({
+  // level: process.env.NODE_ENV === 'test' ? 'silent' : 'info'
+  level: 'info'
+});
 
 async function ingestLog(req, res, next) {
   try {
@@ -25,11 +28,11 @@ async function ingestLog(req, res, next) {
       throw createAppError(11, 'Invalid timestamp', 400);
     }
 
-    // Pino creates the log message (as required)
-    logger.info(doc, 'http_request');
-
     // Persist to MongoDB (logs collection)
     await Log.create(doc);
+
+    // Console logging: allowed in runtime, silenced during tests
+    logger.info(doc, 'http_request');
 
     res.json({ ok: true });
   } catch (err) {

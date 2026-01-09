@@ -2,6 +2,15 @@ const { sendLogToLogsService } = require('./logs-client');
 
 function requestLogger(serviceName) {
   return function (req, res, next) {
+    // Skip external logging during tests (faster + deterministic)
+    if (process.env.NODE_ENV === 'test') {
+      return next();
+    }
+
+    if (req.originalUrl.startsWith('/internal/log')) {
+      return next();
+    }
+
     const start = Date.now();
 
     res.on('finish', () => {
@@ -14,7 +23,6 @@ function requestLogger(serviceName) {
         duration_ms: Date.now() - start
       };
 
-      // Best-effort: לא מפיל את הבקשה אם logs-service לא זמין
       sendLogToLogsService(payload);
     });
 

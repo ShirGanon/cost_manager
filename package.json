@@ -15,12 +15,12 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch --runInBand",
     "start:users": "node services/users-service/server.js",
     "start:costs": "node services/costs-service/server.js",
     "start:logs": "node services/logs-service/server.js",
     "start:admin": "node services/admin-service/server.js",
-
     "start:all": "run-p start:users start:costs start:logs start:admin"
   },
   "dependencies": {
@@ -30,6 +30,9 @@
     "pino": "^10.1.0"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^11.0.1",
+    "npm-run-all": "^4.1.5",
+    "supertest": "^7.2.2"
   }
 }
