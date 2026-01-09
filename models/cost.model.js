@@ -5,7 +5,14 @@ const costSchema = new mongoose.Schema(
     description: { type: String, required: true },
     category: { type: String, required: true },
     userid: { type: Number, required: true },
-    sum: { type: Number, required: true }, // MongoDB Double represented as Number in JS
+
+    // Mongo stores "double", JS uses Number
+    sum: { type: Number, required: true },
+
+    // Business date for the cost (can be future, cannot be past)
+    date: { type: Date, required: true },
+
+    // System timestamp (when inserted)
     createdAt: { type: Date, required: true }
   },
   { versionKey: false }

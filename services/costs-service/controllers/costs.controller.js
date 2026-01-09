@@ -1,5 +1,6 @@
 const Cost = require('../../../models/cost.model');
 const User = require('../../../models/user.model');
+
 const { CATEGORIES } = require('../../../utils/constants');
 const { createAppError } = require('../../../utils/error');
 const {
@@ -10,19 +11,9 @@ const {
   isNotPastDate
 } = require('../../../utils/validate');
 
-/**
- * POST /api/add (cost)
- * Required fields: description, category, userid, sum
- * Optional: createdAt (if not provided -> request time)
- *
- * Notes:
- * - Must validate input.
- * - Must verify user exists.
- * - Must not allow costs with dates in the past.
- */
 async function addCost(req, res, next) {
   try {
-    const { description, category, userid, sum, createdAt } = req.body;
+    const { description, category, userid, sum, date } = req.body;
 
     if (!isNonEmptyString(description)) {
       throw createAppError(101, 'Invalid description', 400);
@@ -42,18 +33,17 @@ async function addCost(req, res, next) {
       throw createAppError(104, 'Invalid sum', 400);
     }
 
-    // Determine createdAt
-    let created = new Date();
-    if (createdAt !== undefined) {
-      const d = parseDate(createdAt);
-      if (!d) {
-        throw createAppError(105, 'Invalid createdAt', 400);
+    // Business date: default today (allowed), allow future, forbid past
+    let costDate = new Date();
+    if (date !== undefined) {
+      const parsed = parseDate(date);
+      if (!parsed) {
+        throw createAppError(105, 'Invalid date', 400);
       }
-      created = d;
+      costDate = parsed;
     }
 
-    // Must not allow past dates
-    if (!isNotPastDate(created)) {
+    if (!isNotPastDate(costDate)) {
       throw createAppError(106, 'Costs with past dates are not allowed', 400);
     }
 
@@ -68,16 +58,17 @@ async function addCost(req, res, next) {
       category,
       userid: userId,
       sum: costSum,
-      createdAt: created
+      date: costDate,
+      createdAt: new Date()
     });
 
-    // Response should describe the new cost item that was added
+    // Return the added cost item with the same property names as in the costs collection
     res.json({
       description: doc.description,
       category: doc.category,
       userid: doc.userid,
       sum: doc.sum,
-      createdAt: doc.createdAt
+      date: doc.date
     });
   } catch (err) {
     next(err);

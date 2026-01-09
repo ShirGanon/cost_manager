@@ -1,8 +1,8 @@
 /*
  * COMPUTED DESIGN PATTERN:
- * - If the requested month is in the past: cache the computed report in MongoDB and reuse it.
- * - If the requested month is current/future: compute on demand (do not cache).
+ * - If the requested month is in the past: cache the computed report and reuse it.
  * - Costs cannot be added with past dates, so cached past reports remain valid.
+ * - Reports are computed using the business date field: cost.date
  */
 
 const Report = require('../../../models/report.model');
@@ -39,18 +39,18 @@ async function computeMonthlyReport(userid, year, month) {
   const end = new Date(year, month, 1);
 
   const items = await Cost.find(
-    { userid, createdAt: { $gte: start, $lt: end } },
-    { _id: 0, description: 1, category: 1, sum: 1, createdAt: 1 }
+    { userid, date: { $gte: start, $lt: end } },
+    { _id: 0, description: 1, category: 1, sum: 1, date: 1 }
   ).lean();
 
-  const map = new Map();
-  CATEGORIES.forEach((c) => map.set(c, []));
+  const grouped = new Map();
+  CATEGORIES.forEach((c) => grouped.set(c, []));
 
   items.forEach((it) => {
-    const day = new Date(it.createdAt).getDate();
-    const list = map.get(it.category);
-    if (list) {
-      list.push({
+    const day = new Date(it.date).getDate();
+    const arr = grouped.get(it.category);
+    if (arr) {
+      arr.push({
         sum: it.sum,
         description: it.description,
         day
@@ -58,7 +58,7 @@ async function computeMonthlyReport(userid, year, month) {
     }
   });
 
-  report.costs = CATEGORIES.map((c) => ({ [c]: map.get(c) || [] }));
+  report.costs = CATEGORIES.map((c) => ({ [c]: grouped.get(c) || [] }));
   return report;
 }
 
@@ -80,7 +80,6 @@ async function getOrComputeMonthlyReport(userid, year, month) {
   const report = await computeMonthlyReport(userid, year, month);
 
   if (shouldCache) {
-    // Best practice: avoid duplicate key crash if two requests race
     await Report.updateOne(
       { userid, year, month },
       { $setOnInsert: { userid, year, month, costs: report.costs, computedAt: new Date() } },

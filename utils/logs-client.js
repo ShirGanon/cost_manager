@@ -1,5 +1,3 @@
-'use strict';
-
 const { httpPostJson } = require('./http');
 
 function getLogsBaseUrl() {
