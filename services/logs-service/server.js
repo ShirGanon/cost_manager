@@ -6,7 +6,7 @@ const { connectMongo } = require('../../db/mongo');
 async function start() {
   await connectMongo();
 
-  const port = Number(process.env.PORT_LOGS) || 3003;
+  const port = Number(process.env.PORT) || Number(process.env.PORT_LOGS) || 3003;
   app.listen(port, () => {
     console.log(`logs-service listening on ${port}`);
   });
