@@ -1,6 +1,6 @@
 const express = require('express');
 const { toErrorJson } = require('../../utils/error');
-// const { requestLogger } = require('../../utils/request-logger');
+// const { requestLogger } = require('../../utils/request_logger');
 
 const logsRoutes = require('./routes/logs.routes');
 const ingestRoutes = require('./routes/ingest.routes');

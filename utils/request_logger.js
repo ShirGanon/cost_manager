@@ -1,4 +1,4 @@
-const { sendLogToLogsService } = require('./logs-client');
+const { sendLogToLogsService } = require('./logs_client');
 
 function requestLogger(serviceName) {
   return function (req, res, next) {
