@@ -3,6 +3,7 @@ const User = require('../../../models/user.model');
 
 const { CATEGORIES } = require('../../../utils/constants');
 const { createAppError } = require('../../../utils/error');
+const { ERROR_CODES } = require('../../../utils/error_codes');
 const {
   isNonEmptyString,
   parseNumber,
@@ -16,21 +17,21 @@ async function addCost(req, res, next) {
     const { description, category, userid, sum, date } = req.body;
 
     if (!isNonEmptyString(description)) {
-      throw createAppError(101, 'Invalid description', 400);
+      throw createAppError(ERROR_CODES.INVALID_DESCRIPTION, 'Invalid description', 400);
     }
 
     if (!validateCategory(category, CATEGORIES)) {
-      throw createAppError(102, 'Invalid category', 400);
+      throw createAppError(ERROR_CODES.INVALID_CATEGORY, 'Invalid category', 400);
     }
 
     const userId = parseNumber(userid);
     if (userId === null || !Number.isInteger(userId)) {
-      throw createAppError(103, 'Invalid userid', 400);
+      throw createAppError(ERROR_CODES.INVALID_USERID, 'Invalid userid', 400);
     }
 
     const costSum = parseNumber(sum);
     if (costSum === null) {
-      throw createAppError(104, 'Invalid sum', 400);
+      throw createAppError(ERROR_CODES.INVALID_SUM, 'Invalid sum', 400);
     }
 
     // Business date: default today (allowed), allow future, forbid past
@@ -38,19 +39,19 @@ async function addCost(req, res, next) {
     if (date !== undefined) {
       const parsed = parseDate(date);
       if (!parsed) {
-        throw createAppError(105, 'Invalid date', 400);
+        throw createAppError(ERROR_CODES.INVALID_DATE, 'Invalid date', 400);
       }
       costDate = parsed;
     }
 
     if (!isNotPastDate(costDate)) {
-      throw createAppError(106, 'Costs with past dates are not allowed', 400);
+      throw createAppError(ERROR_CODES.COST_DATE_IN_PAST, 'Costs with past dates are not allowed', 400);
     }
 
     // Verify user exists
     const user = await User.findOne({ id: userId }, { _id: 0, id: 1 }).lean();
     if (!user) {
-      throw createAppError(107, 'User not found', 404);
+      throw createAppError(ERROR_CODES.USER_NOT_FOUND, 'User not found', 404);
     }
 
     const doc = await Cost.create({

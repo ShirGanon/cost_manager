@@ -2,6 +2,7 @@ const pino = require('pino');
 
 const Log = require('../../../models/log.model');
 const { createAppError } = require('../../../utils/error');
+const { ERROR_CODES } = require('../../../utils/error_codes');
 
 const logger = pino({
   // level: process.env.NODE_ENV === 'test' ? 'silent' : 'info'
@@ -13,7 +14,7 @@ async function ingestLog(req, res, next) {
     const { timestamp, method, path, status, service } = req.body;
 
     if (!timestamp || !method || !path || typeof status !== 'number' || !service) {
-      throw createAppError(10, 'Invalid log payload', 400);
+      throw createAppError(ERROR_CODES.LOG_INVALID_PAYLOAD, 'Invalid log payload', 400);
     }
 
     const doc = {
@@ -25,7 +26,7 @@ async function ingestLog(req, res, next) {
     };
 
     if (Number.isNaN(doc.timestamp.getTime())) {
-      throw createAppError(11, 'Invalid timestamp', 400);
+      throw createAppError(ERROR_CODES.INVALID_TIMESTAMP, 'Invalid timestamp', 400);
     }
 
     // Persist to MongoDB (logs collection)

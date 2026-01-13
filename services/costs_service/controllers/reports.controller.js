@@ -1,4 +1,5 @@
 const { createAppError } = require('../../../utils/error');
+const { ERROR_CODES } = require('../../../utils/error_codes');
 const { parseNumber, validateMonth, validateYear } = require('../../../utils/validate');
 const reportService = require('../services/report.service');
 
@@ -9,13 +10,13 @@ async function getMonthlyReport(req, res, next) {
     const month = parseNumber(req.query.month);
 
     if (id === null || !Number.isInteger(id)) {
-      throw createAppError(201, 'Invalid id', 400);
+      throw createAppError(ERROR_CODES.INVALID_ID, 'Invalid id', 400);
     }
     if (!validateYear(year)) {
-      throw createAppError(202, 'Invalid year', 400);
+      throw createAppError(ERROR_CODES.INVALID_YEAR, 'Invalid year', 400);
     }
     if (!validateMonth(month)) {
-      throw createAppError(203, 'Invalid month', 400);
+      throw createAppError(ERROR_CODES.INVALID_MONTH, 'Invalid month', 400);
     }
 
     const report = await reportService.getOrComputeMonthlyReport(id, year, month);
