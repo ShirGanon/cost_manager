@@ -1,15 +1,15 @@
+// Import the Mongoose library
 const mongoose = require('mongoose');
 
 let isConnected = false;
 
-/**
- * Connect to MongoDB using Mongoose (shared by all services).
- */
+//Connects to MongoDB
 async function connectMongo() {
   if (isConnected) {
     return;
   }
 
+  // Validate and fetch connection string
   const uri = process.env.MONGO_URI;
   if (!uri) {
     throw new Error('MONGO_URI is missing in .env');
@@ -20,9 +20,7 @@ async function connectMongo() {
   isConnected = true;
 }
 
-/**
- * Optional disconnect (useful for tests).
- */
+// Disconnect from MongoDB
 async function disconnectMongo() {
   if (!isConnected) {
     return;
@@ -32,6 +30,7 @@ async function disconnectMongo() {
   isConnected = false;
 }
 
+// Export connection utilities
 module.exports = {
   connectMongo,
   disconnectMongo

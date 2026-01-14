@@ -1,5 +1,7 @@
+// Import the Mongoose library
 const mongoose = require('mongoose');
 
+// Monthly report schema
 const reportSchema = new mongoose.Schema(
   {
     userid: { type: Number, required: true },
@@ -11,7 +13,8 @@ const reportSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-// uniqueness per (userid, year, month) recommended
+// Prevent duplicate reports
 reportSchema.index({ userid: 1, year: 1, month: 1 }, { unique: true });
 
+// Export Report model
 module.exports = mongoose.model('Report', reportSchema, 'reports');

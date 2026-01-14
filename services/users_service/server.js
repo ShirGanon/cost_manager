@@ -1,8 +1,10 @@
+// Load env vars, app, and database
 require('dotenv').config();
 
 const app = require('./app');
 const { connectMongo } = require('../../db/mongo');
 
+// Bootstrap database and server
 async function start() {
   await connectMongo();
 
@@ -12,6 +14,7 @@ async function start() {
   });
 }
 
+// Run startup sequence
 start().catch((err) => {
   console.error(err);
   process.exit(1);

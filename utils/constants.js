@@ -1,3 +1,4 @@
+//List of allowed expense categories
 const CATEGORIES = Object.freeze([
   'food',
   'health',
@@ -6,6 +7,7 @@ const CATEGORIES = Object.freeze([
   'education'
 ]);
 
+// Export categories for validation and reports
 module.exports = {
   CATEGORIES
 };

@@ -1,3 +1,4 @@
+// Express app setup with middleware and routes
 const express = require('express');
 const { toErrorJson } = require('../../utils/error');
 const { requestLogger } = require('../../utils/request_logger');
@@ -10,11 +11,12 @@ app.use(requestLogger('users-service'));
 
 app.use('/api', usersRoutes);
 
-// error handler (must be last)
+// Centralized error handler
 app.use((err, req, res, next) => {
   const status = err.statusCode || 400;
   res.status(status).json(toErrorJson(err));
 });
 
+// Export app instance
 module.exports = app;
 

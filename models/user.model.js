@@ -1,5 +1,7 @@
+// Import the Mongoose library
 const mongoose = require('mongoose');
 
+// User schema with unique ID
 const userSchema = new mongoose.Schema(
   {
     id: { type: Number, required: true, unique: true },
@@ -10,4 +12,5 @@ const userSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
+// Export User model
 module.exports = mongoose.model('User', userSchema, 'users');
