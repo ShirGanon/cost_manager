@@ -228,5 +228,3 @@ The system uses centralized error codes defined in `utils/error_codes.js`. All e
 ## 👥 Authors
 - Shir Ganon
 - Aviv Grinberg
-
----
