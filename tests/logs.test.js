@@ -1,7 +1,7 @@
 // Import Supertest and logs-service
 const request = require('supertest');
 
-const logsApp = require('../services/logs-service/app');
+const logsApp = require('../services/logs_service/app');
 
 // Integration tests for logs-service
 describe('logs-service endpoints', () => {

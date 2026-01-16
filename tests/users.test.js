@@ -1,7 +1,7 @@
 // Import Supertest and users app
 const request = require('supertest');
 
-const usersApp = require('../services/users-service/app');
+const usersApp = require('../services/users_service/app');
 
 // Integration tests for users-service
 describe('users-service endpoints', () => {

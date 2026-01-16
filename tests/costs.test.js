@@ -1,8 +1,8 @@
 // Import Supertest and services
 const request = require('supertest');
 
-const costsApp = require('../services/costs-service/app');
-const usersApp = require('../services/users-service/app');
+const costsApp = require('../services/costs_service/app');
+const usersApp = require('../services/users_service/app');
 
 // Helper to generate tomorrow's date
 function tomorrowIsoDate() {

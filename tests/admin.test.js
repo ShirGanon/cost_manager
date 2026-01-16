@@ -1,7 +1,7 @@
 // Import Supertest and admin app
 const request = require('supertest');
 
-const adminApp = require('../services/admin-service/app');
+const adminApp = require('../services/admin_service/app');
 
 // Integration tests for admin-service
 describe('admin-service endpoints', () => {
