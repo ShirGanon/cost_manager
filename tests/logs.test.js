@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const logsApp = require('../services/logs-service/app');
+const logsApp = require('../services/logs_service/app');
 
 describe('logs-service endpoints', () => {
   test('POST /internal/log ingests a log', async () => {

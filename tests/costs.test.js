@@ -1,7 +1,7 @@
 const request = require('supertest');
 
-const costsApp = require('../services/costs-service/app');
-const usersApp = require('../services/users-service/app');
+const costsApp = require('../services/costs_service/app');
+const usersApp = require('../services/users_service/app');
 
 function tomorrowIsoDate() {
   const now = new Date();

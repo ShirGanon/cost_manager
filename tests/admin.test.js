@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const adminApp = require('../services/admin-service/app');
+const adminApp = require('../services/admin_service/app');
 
 describe('admin-service endpoints', () => {
   test('GET /api/about returns team members (first_name + last_name only)', async () => {

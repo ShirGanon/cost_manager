@@ -6,7 +6,7 @@
   1300-1399: Logs
   1400-1499: Admin
   2000-2099: Database (Mongo/Mongoose)
-  3000-3099: Upstream / Network
+  5000-5999: Internal / Unknown
 */
 const ERROR_CODES = Object.freeze({
   // Validation / Input

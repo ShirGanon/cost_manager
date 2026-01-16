@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const usersApp = require('../services/users-service/app');
+const usersApp = require('../services/users_service/app');
 
 describe('users-service endpoints', () => {
   test('POST /api/add adds a user', async () => {
