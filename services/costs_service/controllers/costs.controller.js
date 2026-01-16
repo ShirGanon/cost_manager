@@ -1,9 +1,12 @@
+// Import Mongoose models
 const Cost = require('../../../models/cost.model');
 const User = require('../../../models/user.model');
 
+// Import constants and error factorys
 const { CATEGORIES } = require('../../../utils/constants');
 const { createAppError } = require('../../../utils/error');
 const { ERROR_CODES } = require('../../../utils/error_codes');
+// Import validation utilities
 const {
   isNonEmptyString,
   parseNumber,
@@ -12,10 +15,12 @@ const {
   isNotPastDate
 } = require('../../../utils/validate');
 
+// Controller for adding new costs
 async function addCost(req, res, next) {
   try {
     const { description, category, userid, sum, date } = req.body;
 
+    // Validate description and category
     if (!isNonEmptyString(description)) {
       throw createAppError(ERROR_CODES.INVALID_DESCRIPTION, 'Invalid description', 400);
     }
@@ -24,6 +29,7 @@ async function addCost(req, res, next) {
       throw createAppError(ERROR_CODES.INVALID_CATEGORY, 'Invalid category', 400);
     }
 
+    // Validate userid and sum
     const userId = parseNumber(userid);
     if (userId === null || !Number.isInteger(userId)) {
       throw createAppError(ERROR_CODES.INVALID_USERID, 'Invalid userid', 400);
@@ -34,7 +40,7 @@ async function addCost(req, res, next) {
       throw createAppError(ERROR_CODES.INVALID_SUM, 'Invalid sum', 400);
     }
 
-    // Business date: default today (allowed), allow future, forbid past
+    // Process and validate date
     let costDate = new Date();
     if (date !== undefined) {
       const parsed = parseDate(date);
@@ -54,6 +60,7 @@ async function addCost(req, res, next) {
       throw createAppError(ERROR_CODES.USER_NOT_FOUND, 'User not found', 404);
     }
 
+    // Create and save cost record
     const doc = await Cost.create({
       description: description.trim(),
       category,
@@ -63,7 +70,7 @@ async function addCost(req, res, next) {
       createdAt: new Date()
     });
 
-    // Return the added cost item with the same property names as in the costs collection
+    // Return created cost item
     res.json({
       description: doc.description,
       category: doc.category,
@@ -76,6 +83,7 @@ async function addCost(req, res, next) {
   }
 }
 
+// Export cost controller
 module.exports = {
   addCost
 };

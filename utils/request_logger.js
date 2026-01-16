@@ -1,5 +1,7 @@
+// Import inter-service logging client
 const { sendLogToLogsService } = require('./logs_client');
 
+// Middleware to log request metadata
 function requestLogger(serviceName) {
   return function (req, res, next) {
     // Skip external logging during tests (faster + deterministic)
@@ -7,12 +9,14 @@ function requestLogger(serviceName) {
       return next();
     }
 
+    // Prevent recursive logging loops
     if (req.originalUrl.startsWith('/internal/log')) {
       return next();
     }
 
     const start = Date.now();
 
+    // Log on response 'finish' event
     res.on('finish', () => {
       const payload = {
         timestamp: new Date(),
@@ -23,6 +27,7 @@ function requestLogger(serviceName) {
         duration_ms: Date.now() - start
       };
 
+      // Asynchronously dispatch log payload
       sendLogToLogsService(payload);
     });
 
@@ -30,6 +35,7 @@ function requestLogger(serviceName) {
   };
 }
 
+// Export request logger middleware
 module.exports = {
   requestLogger
 };
