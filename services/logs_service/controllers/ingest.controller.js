@@ -3,6 +3,7 @@ const pino = require('pino');
 
 const Log = require('../../../models/log.model');
 const { createAppError } = require('../../../utils/error');
+const { ERROR_CODES } = require('../../../utils/error_codes');
 
 // Initialize logger at info level
 const logger = pino({
@@ -17,7 +18,7 @@ async function ingestLog(req, res, next) {
 
     // Validate log payload fields
     if (!timestamp || !method || !path || typeof status !== 'number' || !service) {
-      throw createAppError(10, 'Invalid log payload', 400);
+      throw createAppError(ERROR_CODES.LOG_INVALID_PAYLOAD, 'Invalid log payload', 400);
     }
 
     const doc = {
@@ -30,7 +31,7 @@ async function ingestLog(req, res, next) {
 
     // Validate log timestamp
     if (Number.isNaN(doc.timestamp.getTime())) {
-      throw createAppError(11, 'Invalid timestamp', 400);
+      throw createAppError(ERROR_CODES.INVALID_TIMESTAMP, 'Invalid timestamp', 400);
     }
 
     await Log.create(doc);

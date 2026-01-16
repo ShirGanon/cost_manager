@@ -17,10 +17,10 @@
   "scripts": {
     "test": "jest --runInBand",
     "test:watch": "jest --watch --runInBand",
-    "start:users": "node services/users-service/server.js",
-    "start:costs": "node services/costs-service/server.js",
-    "start:logs": "node services/logs-service/server.js",
-    "start:admin": "node services/admin-service/server.js",
+    "start:users": "node services/users_service/server.js",
+    "start:costs": "node services/costs_service/server.js",
+    "start:logs": "node services/logs_service/server.js",
+    "start:admin": "node services/admin_service/server.js",
     "start:all": "run-p start:users start:costs start:logs start:admin"
   },
   "dependencies": {

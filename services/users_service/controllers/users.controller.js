@@ -2,6 +2,7 @@
 const User = require('../../../models/user.model');
 const Cost = require('../../../models/cost.model');
 const { createAppError } = require('../../../utils/error');
+const { ERROR_CODES } = require('../../../utils/error_codes');
 const { parseNumber } = require('../../../utils/validate');
 
 // Fetch all users excluding _id
@@ -19,13 +20,13 @@ async function getUserDetails(req, res, next) {
   try {
     const id = parseNumber(req.params.id);
     if (id === null) {
-      throw createAppError(2, 'Invalid id', 400);
+      throw createAppError(ERROR_CODES.INVALID_ID, 'Invalid id', 400);
     }
 
     // Fetch and verify user existence
     const user = await User.findOne({ id }, { _id: 0 }).lean();
     if (!user) {
-      throw createAppError(3, 'User not found', 404);
+      throw createAppError(ERROR_CODES.USER_NOT_FOUND, 'User not found', 404);
     }
 
     // Aggregate total costs for user
@@ -55,18 +56,18 @@ async function addUser(req, res, next) {
 
     // Type check and parse input data
     if (typeof first_name !== 'string' || typeof last_name !== 'string') {
-      throw createAppError(4, 'Invalid first_name/last_name', 400);
+      throw createAppError(ERROR_CODES.INVALID_FIRST_NAME_LAST_NAME, 'Invalid first_name/last_name', 400);
     }
 
     const userId = parseNumber(id);
     if (userId === null) {
-      throw createAppError(5, 'Invalid id', 400);
+      throw createAppError(ERROR_CODES.INVALID_ID, 'Invalid id', 400);
     }
 
     // Validate date format
     const bday = new Date(birthday);
     if (Number.isNaN(bday.getTime())) {
-      throw createAppError(6, 'Invalid birthday', 400);
+      throw createAppError(ERROR_CODES.INVALID_BIRTHDAY, 'Invalid birthday', 400);
     }
 
     const created = await User.create({
