@@ -1,18 +1,22 @@
+// Import Pino logger and Log model
 const pino = require('pino');
 
 const Log = require('../../../models/log.model');
 const { createAppError } = require('../../../utils/error');
 const { ERROR_CODES } = require('../../../utils/error_codes');
 
+// Initialize logger at info level
 const logger = pino({
   // level: process.env.NODE_ENV === 'test' ? 'silent' : 'info'
   level: 'info'
 });
 
+// Process, validate, and save logs
 async function ingestLog(req, res, next) {
   try {
     const { timestamp, method, path, status, service } = req.body;
 
+    // Validate log payload fields
     if (!timestamp || !method || !path || typeof status !== 'number' || !service) {
       throw createAppError(ERROR_CODES.LOG_INVALID_PAYLOAD, 'Invalid log payload', 400);
     }
@@ -25,14 +29,14 @@ async function ingestLog(req, res, next) {
       service: String(service)
     };
 
+    // Validate log timestamp
     if (Number.isNaN(doc.timestamp.getTime())) {
       throw createAppError(ERROR_CODES.INVALID_TIMESTAMP, 'Invalid timestamp', 400);
     }
 
-    // Persist to MongoDB (logs collection)
     await Log.create(doc);
 
-    // Console logging: allowed in runtime, silenced during tests
+    // Log to console and return response
     logger.info(doc, 'http_request');
 
     res.json({ ok: true });
@@ -41,6 +45,7 @@ async function ingestLog(req, res, next) {
   }
 }
 
+// Export log handler
 module.exports = {
   ingestLog
 };

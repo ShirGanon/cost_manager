@@ -1,11 +1,14 @@
+// Import Express and core utilities
 const express = require('express');
 
 const { toErrorJson } = require('../../utils/error');
 const { requestLogger } = require('../../utils/request_logger');
 
+// Load costs and reports routes
 const costsRoutes = require('./routes/costs.routes');
 const reportsRoutes = require('./routes/reports.routes');
 
+// Initialize app and JSON parsing
 const app = express();
 app.use(express.json());
 
@@ -21,4 +24,5 @@ app.use((err, req, res, next) => {
   res.status(status).json(toErrorJson(err));
 });
 
+// Export app instance
 module.exports = app;

@@ -1,10 +1,7 @@
-/**
- * Returns developers team members.
- * Requirement: properties must match users collection names (first_name, last_name).
- * Do NOT include any additional data.
- */
+// Fetch team members with schema mapping
 async function getAbout(req, res, next) {
   try {
+    // Static team member list
     const team = [
       { first_name: 'Aviv', last_name: 'Grinberg' },
       { first_name: 'Shir', last_name: 'Ganon' }
@@ -16,6 +13,7 @@ async function getAbout(req, res, next) {
   }
 }
 
+// Export getAbout controller
 module.exports = {
   getAbout
 };
