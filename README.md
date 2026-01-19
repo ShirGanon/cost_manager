@@ -58,6 +58,15 @@ The system is built using:
    PORT_ADMIN=3004
    
    LOGS_BASE_URL=http://localhost:3003
+   
+   # Test mode: 'local' for local testing, 'render' for render.com deployment
+   TEST_MODE=local
+   
+   # Remote Test URLs (used ONLY if TEST_MODE=render)
+   TEST_URL_USERS=https://your-users-service.onrender.com
+   TEST_URL_COSTS=https://your-costs-service.onrender.com
+   TEST_URL_LOGS=https://your-logs-service.onrender.com
+   TEST_URL_ADMIN=https://your-admin-service.onrender.com
    ```
 
    **Note:** Replace the `MONGO_URI` with your actual MongoDB Atlas connection string or local MongoDB URI.
@@ -106,6 +115,11 @@ admin-service listening on 3004
 ---
 
 ## 🧪 Testing
+
+Before running tests, ensure the `TEST_MODE` environment variable is set in your `.env` file:
+
+- Set `TEST_MODE=local` for testing in a local development environment
+- Set `TEST_MODE=render` for testing in a render.com deployment environment
 
 Run the test suite:
 ```bash
