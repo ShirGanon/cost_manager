@@ -108,11 +108,13 @@ describe('costs-service endpoints', () => {
       .send({ id: 123123, first_name: 'mosh', last_name: 'israeli', birthday: '1990-01-01' })
       .expect(200);
 
+    // Test 400 error on cost post
     const res = await client('costs')
       .post('/api/add')
       .send({ userid: 123123, description: 'something', category: 'travel', sum: 10 })
       .expect(400);
 
+    // Validate error response structure
     expect(res.body).toHaveProperty('id');
     expect(res.body).toHaveProperty('message');
   });

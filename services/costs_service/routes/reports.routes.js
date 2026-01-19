@@ -5,7 +5,6 @@ const controller = require('../controllers/reports.controller');
 const router = express.Router();
 
 // Route for monthly cost reports
-// GET /api/report?id=...&year=...&month=...
 router.get('/report', controller.getMonthlyReport);
 
 // Export report router

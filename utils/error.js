@@ -1,3 +1,4 @@
+// Import shared error codes
 const { ERROR_CODES } = require('./error_codes');
 
 // Factory for custom business errors

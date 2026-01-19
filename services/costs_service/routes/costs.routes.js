@@ -5,7 +5,6 @@ const controller = require('../controllers/costs.controller');
 const router = express.Router();
 
 // Route for adding cost items
-// POST /api/add  (cost item)
 router.post('/add', controller.addCost);
 
 // Export costs router

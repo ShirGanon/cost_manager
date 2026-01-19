@@ -7,7 +7,6 @@ const { ERROR_CODES } = require('../../../utils/error_codes');
 
 // Initialize logger at info level
 const logger = pino({
-  // level: process.env.NODE_ENV === 'test' ? 'silent' : 'info'
   level: 'info'
 });
 

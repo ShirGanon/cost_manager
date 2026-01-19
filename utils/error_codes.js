@@ -18,6 +18,7 @@ const ERROR_CODES = Object.freeze({
   INVALID_DESCRIPTION: 1005,
   INVALID_CATEGORY: 1006,
   INVALID_USERID: 1007,
+  // Business logic input validation
   INVALID_SUM: 1008,
   INVALID_DATE: 1009,
   INVALID_YEAR: 1010,
