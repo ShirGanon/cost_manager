@@ -112,11 +112,6 @@ Run the test suite:
 npm test
 ```
 
-Run tests in watch mode (for development):
-```bash
-npm run test:watch
-```
-
 The test suite uses:
 - **Jest** as the test framework
 - **Supertest** for HTTP endpoint testing

@@ -1,13 +1,10 @@
-// Import Supertest and admin app
-const request = require('supertest');
-
-const adminApp = require('../services/admin_service/app');
+// Admin service tests
+const { client } = require('./api_client');
 
 // Integration tests for admin-service
 describe('admin-service endpoints', () => {
   test('GET /api/about returns team members (first_name + last_name only)', async () => {
-    // Test GET /about success
-    const res = await request(adminApp)
+    const res = await client('admin')
       .get('/api/about')
       .expect(200);
 

@@ -1,8 +1,5 @@
-// Import Supertest and services
-const request = require('supertest');
-
-const costsApp = require('../services/costs_service/app');
-const usersApp = require('../services/users_service/app');
+// Costs service tests
+const { client } = require('./api_client');
 
 // Helper to generate tomorrow's date
 function tomorrowIsoDate() {
@@ -14,13 +11,13 @@ function tomorrowIsoDate() {
 describe('costs-service endpoints', () => {
   test('POST /api/add rejects past date', async () => {
     // Ensure user exists (requirement)
-    await request(usersApp)
+    await client('users')
       .post('/api/add')
       .send({ id: 123123, first_name: 'mosh', last_name: 'israeli', birthday: '1990-01-01' })
       .expect(200);
 
     // Test 400 error on past date
-    const res = await request(costsApp)
+    const res = await client('costs')
       .post('/api/add')
       .send({
         description: 'pizza',
@@ -39,13 +36,13 @@ describe('costs-service endpoints', () => {
 
   test('POST /api/add accepts future date', async () => {
     // Verify user existence for test
-    await request(usersApp)
+    await client('users')
       .post('/api/add')
       .send({ id: 123123, first_name: 'mosh', last_name: 'israeli', birthday: '1990-01-01' })
       .expect(200);
 
     // Test persistence of future cost items
-    const res = await request(costsApp)
+    const res = await client('costs')
       .post('/api/add')
       .send({
         description: 'gym membership',
@@ -68,7 +65,7 @@ describe('costs-service endpoints', () => {
 
   test('GET /api/report returns grouped report structure', async () => {
     // Ensure user exists before report test
-    await request(usersApp)
+    await client('users')
       .post('/api/add')
       .send({ id: 123123, first_name: 'mosh', last_name: 'israeli', birthday: '1990-01-01' })
       .expect(200);
@@ -79,7 +76,7 @@ describe('costs-service endpoints', () => {
     const mm = now.getMonth() + 1;
 
     // Create cost entry for current month
-    await request(costsApp)
+    await client('costs')
       .post('/api/add')
       .send({
         description: 'choco',
@@ -92,7 +89,7 @@ describe('costs-service endpoints', () => {
       .expect(200);
 
     // Fetch report and validate schema
-    const res = await request(costsApp)
+    const res = await client('costs')
       .get('/api/report')
       .query({ id: 123123, year: yyyy, month: mm })
       .expect(200);
@@ -102,5 +99,21 @@ describe('costs-service endpoints', () => {
     expect(res.body).toHaveProperty('year', yyyy);
     expect(res.body).toHaveProperty('month', mm);
     expect(Array.isArray(res.body.costs)).toBe(true);
+
+  });
+  // Invalid category test
+  test('POST /api/add rejects invalid category', async () => {
+    await client('users')
+      .post('/api/add')
+      .send({ id: 123123, first_name: 'mosh', last_name: 'israeli', birthday: '1990-01-01' })
+      .expect(200);
+
+    const res = await client('costs')
+      .post('/api/add')
+      .send({ userid: 123123, description: 'something', category: 'travel', sum: 10 })
+      .expect(400);
+
+    expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('message');
   });
 });

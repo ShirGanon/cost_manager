@@ -1,13 +1,11 @@
-// Import Supertest and logs-service
-const request = require('supertest');
-
-const logsApp = require('../services/logs_service/app');
+// Logs service tests
+const { client } = require('./api_client');
 
 // Integration tests for logs-service
 describe('logs-service endpoints', () => {
   test('POST /internal/log ingests a log', async () => {
     // Test POST log ingestion
-    const res = await request(logsApp)
+    const res = await client('logs')
       .post('/internal/log')
       .send({
         timestamp: new Date().toISOString(),
@@ -24,7 +22,7 @@ describe('logs-service endpoints', () => {
 
   test('GET /api/logs returns logs array', async () => {
     // Seed database for retrieval test
-    await request(logsApp)
+    await client('logs')
       .post('/internal/log')
       .send({
         timestamp: new Date().toISOString(),
@@ -37,7 +35,7 @@ describe('logs-service endpoints', () => {
       .expect(200);
 
     // Test GET logs success
-    const res = await request(logsApp)
+    const res = await client('logs')
       .get('/api/logs')
       .expect(200);
 

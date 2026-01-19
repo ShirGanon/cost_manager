@@ -1,23 +1,16 @@
-// Load environment variables
-require('dotenv').config({ quiet: true });
-
-// Import Mongoose
-const mongoose = require('mongoose');
+require('dotenv').config({ quiet: true }); // Load environment variables
+const mongoose = require('mongoose'); // Import Mongoose
 
 // Import database connection utilities
 const { connectMongo, disconnectMongo } = require('../db/mongo');
+// Import test configuration utilities
+const { getMode } = require('./test_config');
 
-// Global setup: connect to real MongoDB
+// Global setup: connect to our MongoDB
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
 
-  // Modify MONGO_URI to use /test database for testing
-  let uri = process.env.MONGO_URI;
-  if (!uri.includes('/test')) {
-    const parts = uri.split('?');
-    process.env.MONGO_URI = parts[0].replace(/\/[^\/]*$/, '/test') + '?' + (parts[1] || '');
-  }
-
+  // connect to MongoDB before tests
   await connectMongo();
 });
 
